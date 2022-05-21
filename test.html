@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>笔试</title>
+    <style type="text/css">
+
+        input:focus{
+            outline: none;
+        }
+        body,html{
+            margin: 0px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+
+<body id="all" >
+    <div>
+        <label for="1.1"></label><input id="1.1" type="checkbox">
+        <label for="1.2"></label><input id="1.2" type="checkbox">
+        <label for="1.3"></label><input id="1.3" type="checkbox">
+        <label for="1.4"></label><input id="1.4" type="checkbox">
+        <label for="1.5"></label><input id="1.5" type="checkbox">
+        <label for="1.6"></label><input id="1.6" type="checkbox">
+    </div>
+    <div>
+        <label for="2.1"></label><input id="2.1" type="checkbox">
+        <label for="2.2"></label><input id="2.2" type="checkbox">
+        <label for="2.3"></label><input id="2.3" type="checkbox">
+        <label for="2.4"></label><input id="2.4" type="checkbox">
+        <label for="2.5"></label><input id="2.5" type="checkbox">
+        <label for="2.6"></label><input id="2.6" type="checkbox">
+    </div>
+    <div>
+        <label for="3.1"></label><input id="3.1" type="checkbox">
+        <label for="3.2"></label><input id="3.2" type="checkbox">
+        <label for="3.3"></label><input id="3.3" type="checkbox">
+        <label for="3.4"></label><input id="3.4" type="checkbox">
+        <label for="3.5"></label><input id="3.5" type="checkbox">
+        <label for="3.6"></label><input id="3.6" type="checkbox">
+        <div id="content"></div>
+    </div>
+    <div id="region" style="position:absolute;top:0;left:0;border:1px gray dashed;display:none"></div>
+
+
+</body>
+<script>
+    document.getElementById('all').onselectstart = function() {return false};
+    // document.getElementById('all').unselectable = 'on';
+
+    let aList = ['1.1','1.2','1.3','1.4','1.5','1.6',
+        '2.1','2.2','2.3','2.4','2.5','2.6',
+        '3.1','3.2','3.3','3.4','3.5','3.6']
+    let positionObj = {}
+    let pressedMouse = false
+    let startX = 0
+    let startY = 0
+
+    for(let i = 0;i<aList.length;i++){
+        let a = document.getElementById(aList[i])
+        positionObj[aList[i]] = [a.offsetLeft,a.offsetTop]
+    }
+
+    let region = document.getElementById('region')
+
+    function mousedownFunction(e){
+        //获取鼠标点下时的起始位置
+        startX = e.x
+        startY = e.y
+        // document.getElementById('content').innerHTML = 'postion: '+ startX + ','+ startY
+        pressedMouse = true
+        //初始化checkbox
+        for(let i=0;i<aList.length;i++){
+            document.getElementById(aList[i]).checked = false
+        }
+        return  pressedMouse
+    }
+
+    document.addEventListener('mousedown',function (i){
+        mousedownFunction(i)
+            document.onmousemove = function (i) {
+                if(pressedMouse === true){
+
+                    x = i.clientX
+                    y = i.clientY
+
+                    // document.getElementById('content').innerHTML = 'postion: '+ x + ','+ y
+                    for(let i=0;i<aList.length;i++){
+                        // console.log(positionObj[aList[i]][0])
+                        //往左上方框选
+                        if(x<startX && y<startY){
+                            if (x <= positionObj[aList[i]][0] && positionObj[aList[i]][0] <= startX
+                                && y<=positionObj[aList[i]][1] && positionObj[aList[i]][1]<= startY){
+                                region.style.top = y + 'px'
+                                region.style.left = x + 'px'
+                                region.style.display = 'block'
+                                region.style.width = Math.abs(x - startX) + "px";
+                                region.style.height = Math.abs(y-startY) + "px";
+
+                                document.getElementById(aList[i]).checked = true
+                            }
+                        }
+                        //往左下方框选
+                        if(x<startX && y>startY){
+                            if (x <= positionObj[aList[i]][0] && positionObj[aList[i]][0] <= startX
+                                && y>=positionObj[aList[i]][1] && positionObj[aList[i]][1]>= startY){
+                                region.style.top = startY + 'px'
+                                region.style.left = x + 'px'
+                                region.style.display = 'block'
+                                region.style.width = Math.abs(x - startX) + "px";
+                                region.style.height = Math.abs(y-startY) + "px";
+
+                                document.getElementById(aList[i]).checked = true
+                            }
+                        }
+                        //往右上方框选
+                        if(x>startX && y<startY){
+                            if (x >= positionObj[aList[i]][0] && positionObj[aList[i]][0] >= startX
+                                && y<=positionObj[aList[i]][1] && positionObj[aList[i]][1]<= startY){
+                                region.style.top = y + 'px'
+                                region.style.left = startX + 'px'
+                                region.style.display = 'block'
+                                region.style.width = Math.abs(x - startX) + "px";
+                                region.style.height = Math.abs(y-startY) + "px";
+                                document.getElementById(aList[i]).checked = true
+                            }
+                        }
+                        //往右下方框选
+                        if(x>startX && y>startY){
+                            if (x >= positionObj[aList[i]][0] && positionObj[aList[i]][0] >= startX
+                                && y>=positionObj[aList[i]][1] && positionObj[aList[i]][1]>= startY){
+                                region.style.top = startY + 'px'
+                                region.style.left = startX + 'px'
+                                region.style.display = 'block'
+                                region.style.width = Math.abs(x - startX) + "px";
+                                region.style.height = Math.abs(y-startY) + "px";
+                                document.getElementById(aList[i]).checked = true
+                            }
+                        }
+                    }
+                }
+
+            }
+            document.onmouseup = function (){
+                pressedMouse = false
+                document.getElementById('region').style.display = 'none'
+                return pressedMouse
+            }
+
+    })
+
+</script>
+</html>
+
